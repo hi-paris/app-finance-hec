@@ -229,7 +229,7 @@ def convert_df(df):
 
 st.title("HEC Paris - Finance Labs🧪")
 st.subheader("Portfolio theory 📈")
-st.markdown("Course provided by: **François Derrien**, **Irina Zviadadze**")
+st.markdown("Course provided by: **François Derrien**, **Irina Zviadadze**, **Mian Liu**, **Teodor Duevski**, **Quirin Fleckenstein**")
 
 st.markdown("  ")
 
@@ -258,7 +258,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.sidebar.markdown("  ")
     
     if st.sidebar.button('**Submit answers**'):
-        st.sidebar.write('Your answers have been submitted !')
+        st.sidebar.info('Your answers have been submitted !')
 
 
 
@@ -286,6 +286,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.markdown("## 01 - One risky and one risk-free asset")
     st.info("In this exercise, assume that there exists a risk-free asset (a T-bond) with an annual rate of return of 2%. You are given information on daily prices and dividends of individual (risky) stocks. You are asked to choose one risky stock and to compute its expected return and standard deviation of return. Then you have to find the (standard deviation of return, expected return) pairs you can obtain by combining this risky stock with the risk-free asset into portfolios.")
     st.markdown("    ")
+    st.markdown("    ")
 
 
 
@@ -293,7 +294,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     #################################### QUESTION 1 ###################################
 
-    st.subheader("Question 1")
+    st.subheader("Question 1 📝")
 
     #################### Part 1
 
@@ -305,8 +306,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.markdown("   ")
 
     # ## View risky dataset
-    st.markdown(f"**View the {risky_asset} stock** (Date, Price, Dividends)")
-    st.dataframe(df_risky.reset_index(drop=True).head(5))
+    st.markdown(f"**View the {risky_asset} data** with Date, Closing Price and Dividends.")
+    st.dataframe(df_risky.reset_index(drop=True))
 
 
     ## Download dataset as xlsx
@@ -325,7 +326,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     # Download the file
     with open(f"{risky_asset}.xlsx", "rb") as f:
             st.download_button(
-                    label=f"📥 Download the **{risky_asset}** dataset as xlsx",
+                    label=f"📥 Download the **{risky_asset}** data",
                     data=f,
                     file_name=f"{risky_asset}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -333,6 +334,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
 
+    st.markdown("   ")
     st.markdown("   ")
 
     # Compute holding-period returns, expected returns, std 
@@ -342,7 +344,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
 
     # Holding-period returns
-    st.write(f"**Compute the holding-period returns of {risky_asset}** 📝")
+    st.write(f"**Compute the holding-period returns of {risky_asset}**")
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q1",type=['xlsx'])
     if upload_expected_return is not None:
@@ -354,15 +356,18 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     solution = st.checkbox('**Solution** ✅',key="SQ1.1")
     if solution:
-        answer_text = f'The realized returns of {dictionary_symbols[risky_asset]} is {np.round(asset1_returns,4)}.'
-        st.success(answer_text)
+        returns_result = pd.DataFrame({"Date":df_risky["Date"].iloc[1:], "Return":asset1_returns})
+        st.dataframe(returns_result)
+        
+        #answer_text = f'The realized returns of {dictionary_symbols[risky_asset]} is {np.round(asset1_returns,4)}.'
+        #st.success(answer_text)
         
     st.markdown("  ")
     st.markdown("  ")
 
     
     # Expected returns
-    st.write(f"**Compute the expected returns of {risky_asset}** 📝")
+    st.write(f"**Compute the expected returns of {risky_asset}**")
     answer = st.text_input("Enter your results",0, key="AQ1.2a")
 
     st.markdown("  ")
@@ -377,7 +382,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     # Standard deviation
-    st.write(f"**Compute the standard deviation of {risky_asset}** 📝")
+    st.write(f"**Compute the standard deviation of {risky_asset}**")
     st.text_input("Enter your results ",0, key="AUQ1.2b")
 
     st.markdown("   ")
@@ -402,7 +407,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     ###################################### QUESTION 2 ##########################################
        
 
-    st.subheader("Question 2")
+    st.subheader("Question 2 📝")
     
     ### Part 1
     st.markdown('''<p style="font-size: 22px;"> Assume that you have a capital of 1000 EUR that you fully invest in a portfolio. <b>Combine two assets</b> (one risky and one risk-free asset) into a <b>portfolio</b>. Next, <b>compute the expected returns</b> and <b>standard deviation</b> of the portfolio.</p>''',
@@ -412,7 +417,11 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     st.markdown("   ")
+    st.markdown("   ")
 
+    st.subheader(f"1. Create a portfolio with {risky_asset} and a risk-free asset")
+
+    st.markdown("   ")
 
 
     # Concatenate graphs for plot
@@ -441,18 +450,15 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
   
 
-    import io
-
-
     st.markdown("  ")
     
     # Create a portfolio by selecting amount (EUR) in risky asset
-    st.write(f"**Create a portfolio with the {risky_asset} asset and a risk free asset ⚖️**")
+    st.write(f"**Select the amount you want to put in {risky_asset}**")
 
-    risky_amount = st.slider(f"Select the amount you want to put in {risky_asset}", min_value=0, max_value=1000, step=50, value=500)
+    risky_amount = st.slider(f"**Select the amount you want to put in {risky_asset}**", min_value=0, max_value=1000, step=50, value=500, label_visibility="collapsed")
     riskfree_amount = 1000 - risky_amount
     
-    st.write(f"**Result**: You've invested **{risky_amount} EUR** in {risky_asset} and **{riskfree_amount} EUR** in the risky-free asset.")
+    st.write(f"You've invested {risky_amount} EUR in {risky_asset} and {riskfree_amount} EUR in the risky-free asset.")
 
 
     st.markdown("  ")
@@ -460,13 +466,12 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     # Weight of assets in the portfolio
-    st.write("**Compute the weight of each asset in your portfolio 📝**")
+    st.write("**Compute the weight of each asset in your portfolio**")
 
     risky_weight = risky_amount/1000
     riskfree_weight = riskfree_amount/1000
 
     weight1_input = st.number_input(f'Enter the weight of the {risky_asset} asset')
-    st.markdown("  ")
 
     solution = st.checkbox('**Solution** ✅', key="SQ2.1w1")
     if solution:
@@ -476,8 +481,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.markdown("  ")
     
-    weight2_input = st.number_input(f'Enter the weight of the risk-free asset')
-    st.markdown("  ")
+    weight2_input = st.number_input(f'Enter the weight of the risk-free*asset')
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.1w2")
     if solution:
@@ -486,10 +490,12 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.markdown("   ")
     st.markdown("   ") 
+
+
     st.markdown("   ")
 
-
-    
+    st.subheader(f"2. Compute the expected return and standard deviation of the portfolio")
+    st.markdown("   ")
 
   
     ####### Result: Portfolio expected return 
@@ -501,9 +507,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     # Enter portfolio expected returns
-    st.write("**Compute the expected return of the portfolio** 📝")
+    st.write("**Compute the expected return of the portfolio**")
     st.text_input("Enter your results",0, key="AQ2.21")
-    st.markdown("  ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.21")
     if solution:
@@ -515,10 +520,9 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     # Enter portfolio standard deviation
-    st.write("**Compute the standard deviation of the portfolio** 📝")
+    st.write("**Compute the standard deviation of the portfolio**")
     st.text_input("Enter your results",0, key="AQ2.22")
 
-    st.markdown("  ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.22")
     if solution:
@@ -537,7 +541,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 ################## QUESTION 3
 
-    st.subheader("Question 3")
+    st.subheader("Question 3 📝")
     
     #### PART 1
     st.markdown('''<p style="font-size: 22px;"> Using Excel, <b> construct portfolios </b> that contain x% of the risky asset and (1-x)% of the risk-free asset, with x varying between 0 and 100% with 1% increments.
@@ -564,15 +568,11 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
     
     st.markdown("   ")
-    st.write("**Compute the expected return and standard deviation for each portfolio** 📝")
+    st.write("**Compute the expected return and standard deviation for each portfolio**")
 
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q3.21",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios.head())
 
-    st.markdown("   ")
 
 
     solution = st.checkbox('**Solution** ✅',key="SQ3.1")
@@ -601,16 +601,14 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
 
     
-    st.write("**Draw the set of feasible portfolios 📝**")
+    st.write("**Draw the set of feasible portfolios**")
 
     upload_graph = st.file_uploader("Drop graph as an image (jpg, jpeg, png)", key="Q3.23", type=['jpg','jpeg','png'])
     if upload_graph is not None:
 
         image = Image.open(upload_graph)
-        st.image(image, caption='Graph of the set of feasible portfolios')
-        
+        #st.image(image, caption='Graph of the set of feasible portfolios')
 
-    st.markdown("   ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ3.23")
     if solution:
@@ -647,30 +645,31 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     user_input_1 = st.text_area("**Can you find which portfolio has the highest expected return ?**", default_text)
     solution = st.checkbox('**Solution** ✅',key="SQ4.1")
     if solution:
-        st.success(f"The portfolio with 100% in the risky asset ({risky_asset}) and 0% in the risk free asset.")
+        st.success(f"The portfolio with **1** in the risky asset ({risky_asset}) and **0** in the risk free asset.")
         # st.success(f"The portfolio's expected return is {np.round(np.sum(expected_return_risky),3)}") ?????
 
     st.markdown("   ")
-
+    st.markdown("   ")
 
     ###### PART 2
     user_input_2 = st.text_area("**Can you find which portfolio has the lowest expected return ?**", default_text)
     solution = st.checkbox('**Solution** ✅',key="SQ4.2")
     if solution:
-        st.success(f"The portfolio with 0% in the risky asset ({risky_asset}) and 100% in the risk free asset")
+        st.success(f"The portfolio with **0** in the risky asset ({risky_asset}) and **1** in the risk free asset")
         # st.success(f"The portfolio's expected return is {np.round(np.sum(expected_return_riskfree),3)}") ?????
 
     st.markdown("   ")
-
+    st.markdown("   ")
 
     ###### PART 3
     user_input_3 = st.text_area("**Can you find which portfolio has the highest standard deviation ?**", default_text)
     solution = st.checkbox('**Solution** ✅',key="SQ4.3")
     if solution:
-        st.success(f"The portfolio with 100% in the risky asset ({risky_asset}) and 0% in the risk free asset")
-        st.success(f"The standard deviation is {np.round(asset_std_dev,4)}")
+        st.success(f"The portfolio with **1** in the risky asset ({risky_asset}) and **0** in the risk free asset")
+        st.success(f"The highest standard deviation is **{np.round(asset_std_dev,4)}**")
 
 
+    st.markdown("   ")
     st.markdown("   ")
     
     
@@ -678,8 +677,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     user_input_4 = st.text_area("**Can you find which portfolio has the lowest standard deviation ?**", default_text)
     solution = st.checkbox('**Solution** ✅',key="SQ4.4")
     if solution:
-        st.success(f"The portfolio with 0% in the risky asset ({risky_asset}) and 100% in the risk free asset.")
-        st.success(f"The standard deviation is {np.std(riskfree_returns,ddof=1)}")
+        st.success(f"The portfolio with **0** in the risky asset ({risky_asset}) and **1** in the risk free asset.")
+        st.success(f"The lowest standard deviation is **{np.std(riskfree_returns,ddof=1)}**")
 
 
 
@@ -698,7 +697,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.subheader("Question 5")
     
-    st.markdown('''<p style="font-size: 22px;"> Repeat the exercise of Q3, but with the possibility of selling short one of the two assets. That is, vary x, for example, from -100% to 100%.''',
+    st.markdown('''<p style="font-size: 22px;"> <b>Repeat the exercise of Question 3</b>, but with the possibility of selling short one of the two assets. That is, vary x, for example, from -100% to 100%.''',
                 unsafe_allow_html=True)
     
 
@@ -713,8 +712,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     std_portfolios = np.array([w*asset_std_dev + (1-w)*np.std(riskfree_returns, ddof=1) for w in weight_risky_portfolios])
 
     # Portfolio dataframe to plot
-    df_portfolios = pd.DataFrame({f"{risky_asset}":[str(int(100*w)) + "%" for w in weight_risky_portfolios],
-                                  "Risk-free":[str(int(100*w)) +"%" for w in weight_riskfree_portfolios],
+    df_portfolios = pd.DataFrame({f"{risky_asset}":weight_risky_portfolios,
+                                  "Risk-free":weight_riskfree_portfolios,
                                   "Expected return":expected_returns_portfolios, 
                                   "Standard deviation":std_portfolios})
     
@@ -725,46 +724,43 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
     st.markdown("   ")
 
-    st.write("Compute the **expected return** and **standard deviation** for each portfolio 📝")
+    st.write("**Compute the expected return and standard deviation for each portfolio**")
     upload_expected_return = st.file_uploader("Drop results in an excel file (.xlsx)", key="UQ5.1", type=['xlsx'])
     
     if upload_expected_return is not None:
         expected_return_portfolios = pd.read_csv(upload_expected_return)
         st.write(expected_return_portfolios.head())
 
-    st.markdown("  ")
-
     solution = st.checkbox('**Solution** ✅', key="SQ5.1")
     if solution:
         st.dataframe(df_portfolios)
         
-        # Create a Pandas Excel writer object
-        excel_writer = pd.ExcelWriter(f"portfolios_q5.xlsx", engine='xlsxwriter')
-        df_portfolios.to_excel(excel_writer, index=False, sheet_name='Sheet1')
-        excel_writer.close()
+        # # Create a Pandas Excel writer object
+        # excel_writer = pd.ExcelWriter(f"portfolios_q5.xlsx", engine='xlsxwriter')
+        # df_portfolios.to_excel(excel_writer, index=False, sheet_name='Sheet1')
+        # excel_writer.close()
 
-        # Download the file
-        with open(f"portfolios_q5.xlsx", "rb") as f:
-            st.download_button(
-                    label=f"📥 Download the solution as xlsx",
-                    data=f,
-                    file_name=f"portfolios_q5.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                )
+        # # Download the file
+        # with open(f"portfolios_q5.xlsx", "rb") as f:
+        #     st.download_button(
+        #             label=f"📥 Download the solution as xlsx",
+        #             data=f,
+        #             file_name=f"portfolios_q5.xlsx",
+        #             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        #         )
 
     
     st.markdown("   ")
+    st.markdown("  ")
 
-    st.write("**Draw the set of feasible portfolios 📝**")
+    st.write("**Draw the set of feasible portfolios**")
 
     upload_graph = st.file_uploader("Drop graph as an image (jpg, jpeg, png)", key="UQ5.2", type=['jpg','jpeg','png'])
-    if upload_graph is not None:
+    # if upload_graph is not None:
 
-        image = Image.open(upload_graph)
-        st.image(image, caption='Graph of the set of feasible portfolios')
+    #     image = Image.open(upload_graph)
+    #     st.image(image, caption='Graph of the set of feasible portfolios')
         
-
-    st.markdown("   ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ5.2")
     if solution:
@@ -784,7 +780,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.subheader("Question 6")
     
-    st.markdown('''<p style="font-size: 22px;"> Repeat the exercise of Q4, but with the possibility of selling short one of the two assets. That is, analyze feasible portfolios from Q5.''',
+    st.markdown('''<p style="font-size: 22px;"> <b>Repeat the exercise of Question 4</b>, but with the possibility of <b>selling short</b> one of the two assets. That is, analyze feasible portfolios from Question 5.''',
                 unsafe_allow_html=True)
     
     # st.dataframe(df_portfolios)
@@ -793,8 +789,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     ###### PART 1   
     user_input_1 = st.text_area("**Can you find which portfolio has the highest expected return?**", default_text, key="Q6.1")
     solution = st.checkbox('**Solution** ✅',key="SQ6.1")
-    #if solution:
-        #st.success(f"The portfolio with 100% in the risky asset ({risky_asset}) and 0% in the risk free asset.")
+    if solution:
+        st.success(f"The portfolio with **2** in the risky asset ({risky_asset}) and **-1** in the risk free asset.")
         #st.success(f"The portfolio's expected return is {np.round(np.sum(expected_return_risky),3)}")
 
     st.markdown("   ")
@@ -805,7 +801,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
     solution = st.checkbox('**Solution** ✅',key="SQ6.2")
     if solution:
-        st.success(f"The portfolio with 0% in the risky asset ({risky_asset}) and 100% in the risk free asset")
+        st.success(f"The portfolio with **2** in the risky-free asset and **-1** in {risky_asset}.")
         #st.success(f"The portfolio's expected return is {np.round(np.sum(expected_return_riskfree),3)}")
 
     st.markdown("   ")
@@ -815,8 +811,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     user_input_3 = st.text_area("**Can you find which portfolio has the highest standard deviation?**", default_text, key="Q6.3")
     solution = st.checkbox('**Solution** ✅',key="SQ6.3")
     if solution:
-        st.success(f"The portfolio where you invest 200% in {risky_asset} and short sell the risk-free asset (-100%)")
-        st.success(f"The portfolio's standard deviation is {np.round(df_portfolios.tail(1)['Standard deviation'].to_numpy()[0],4)}")
+        st.success(f"The portfolio with **2** in {risky_asset} and **-1** in the risk-free asset")
+        st.success(f"The portfolio's standard deviation is **{np.round(df_portfolios.tail(1)['Standard deviation'].to_numpy()[0],4)}**")
 
     st.markdown("   ")
     
@@ -825,8 +821,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     user_input_4 = st.text_area("**Can you find which portfolio has the lowest standard deviation?**", default_text, key="Q6.4")
     solution = st.checkbox('**Solution** ✅',key="SQ6.4")
     if solution:
-        st.success(f"The portfolio where you invest 200% in the risky free asset and short sell a {risky_asset} (-100%)")
-        st.success(f"The portfolio's standard deviation is {np.round(df_portfolios['Standard deviation'].to_numpy()[0],4)}")
+        st.success(f"The portfolio where you invest **2** in the risky-free asset and **-1** in {risky_asset}")
+        st.success(f"The portfolio's standard deviation is **{np.round(df_portfolios['Standard deviation'].to_numpy()[0],4)}**")
 
 
 
@@ -853,12 +849,21 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 if lab_numbers == "02 - Two risky assets":
 
     ##################################### SIDEBAR ##########################################
-    risky_asset1_ex2, risky_asset2_ex2  = st.sidebar.multiselect("Select two risky stocks", list_risky_assets, ["AAPL","NVDA"])
+    
+    output_multiselect = st.sidebar.multiselect("Select two risky stocks", list_risky_assets, ["AAPL","NVDA"])
+    
+    if len(output_multiselect) != 2:
+        st.warning("Please select exactly two risky stocks")
+    else:
+        risky_asset1_ex2, risky_asset2_ex2  = output_multiselect
+    
+    
+
 
     st.sidebar.markdown("  ")
     
     if st.sidebar.button('**Submit answers**'):
-        st.sidebar.write('Your answers have been submitted !')
+        st.sidebar.info('Your answers have been submitted !')
     
     
     
@@ -872,7 +877,7 @@ if lab_numbers == "02 - Two risky assets":
     
     ##################################### QUESTION 1 #####################################
     
-    st.subheader("Question 1")
+    st.subheader("Question 1 📝")
     
     ########### Q1 PART 1
     st.markdown('''<p style="font-size: 22px;"> Download prices for two risky stocks. <b>Compute their realized returns</b>.  
@@ -881,8 +886,16 @@ if lab_numbers == "02 - Two risky assets":
                 unsafe_allow_html=True)
 
     st.markdown("  ")
+    st.markdown("  ")
 
+    # st.markdown('''<p style="font-size: 20px;"> <b>First asset</b></p>''',
+    #             unsafe_allow_html=True)
 
+    #st.divider()
+    st.subheader(f"1. First risky stock ({risky_asset1_ex2}) 📋")
+    st.markdown("  ")
+
+    #st.warning(f"First risky asset: **{risky_asset1_ex2}**")
 
     ######################## RISKY ASSET 1 ############################
 
@@ -893,7 +906,7 @@ if lab_numbers == "02 - Two risky assets":
     df_asset1_ex2["Date"] = pd.to_datetime(df_asset1_ex2["Date"]).apply(lambda x: x.strftime("%d/%m/%Y"))
     df_asset1_ex2.columns = ["Date","Price","Dividends"]
     
-    st.markdown(f"**View the {risky_asset1_ex2} dataset** (Date, Price, Dividends) 📋")
+    st.markdown(f"**View the {risky_asset1_ex2} data** with Date, Closing price and Dividends")
     st.dataframe(df_asset1_ex2)
 
 
@@ -910,7 +923,7 @@ if lab_numbers == "02 - Two risky assets":
     # Download the file
     with open(f"{risky_asset1_ex2}_q2.xlsx", "rb") as f:
             st.download_button(
-                    label=f"📥 Download the **{risky_asset1_ex2}** dataset as xlsx",
+                    label=f"📥 Download the **{risky_asset1_ex2}** dataset",
                     data=f,
                     file_name=f"{risky_asset1_ex2}_q2.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -922,50 +935,43 @@ if lab_numbers == "02 - Two risky assets":
 
 
 
-
     ## Compute holding-period returns, expected returns, std 
     asset1_returns = (df_asset1_ex2[f"Price"][1:].to_numpy() - df_asset1_ex2[f"Price"][:-1].to_numpy() + df_asset1_ex2[f"Dividends"].to_numpy()[1:])/df_asset1_ex2[f"Price"][:-1].to_numpy()    
     asset1_expected_return = np.mean(asset1_returns)
     asset1_std_dev = np.std(asset1_returns, ddof=1) 
 
 
-    st.write(f"**Compute the holding-period returns of {risky_asset1_ex2}** 📝")
+    st.write(f"**Compute the holding-period returns of {risky_asset1_ex2}**")
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Ex2.Q1.11",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios)
-
 
     st.markdown("  ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.11")
     if solution:
-        answer_text = f"The realized returns of {risky_asset2_ex2} are **{np.round(asset1_returns[:5],3)}** ..."
-        st.success(answer_text)
 
-        df_returns1 = pd.DataFrame({f"{risky_asset1_ex2} Returns":asset1_returns})
-        #st.dataframe(df_returns1)
+        df_returns1 = pd.DataFrame({"Date":df_asset1_ex2["Date"].iloc[1:],f"Returns ({risky_asset1_ex2})":asset1_returns})
+        st.dataframe(df_returns1)
 
         # Create a xlsx file
-        excel_writer = pd.ExcelWriter(f"{risky_asset1_ex2}_returns.xlsx", engine='xlsxwriter')
-        df_returns1.to_excel(excel_writer, index=False, sheet_name='Sheet1')
-        excel_writer.close()
+        # excel_writer = pd.ExcelWriter(f"{risky_asset1_ex2}_returns.xlsx", engine='xlsxwriter')
+        # df_returns1.to_excel(excel_writer, index=False, sheet_name='Sheet1')
+        # excel_writer.close()
 
-        # Download the file
-        with open(f"{risky_asset1_ex2}_returns.xlsx", "rb") as f:
-            st.download_button(
-                    label=f"📥 Download the **{risky_asset1_ex2} returns** as xlsx",
-                    data=f,
-                    file_name=f"{risky_asset1_ex2}_returns.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                )
+        # # Download the file
+        # with open(f"{risky_asset1_ex2}_returns.xlsx", "rb") as f:
+        #     st.download_button(
+        #             label=f"📥 Download the **{risky_asset1_ex2} returns** as xlsx",
+        #             data=f,
+        #             file_name=f"{risky_asset1_ex2}_returns.xlsx",
+        #             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        #         )
 
     
     st.markdown("  ")
     st.markdown("  ")
 
-    st.write(f"**Compute the expected returns of {risky_asset1_ex2}** 📝")
+    st.write(f"**Compute the expected return of {risky_asset1_ex2}**")
     st.text_input("Enter your results",0, key="Ex2.Q1.12")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.12")
@@ -976,7 +982,7 @@ if lab_numbers == "02 - Two risky assets":
     st.markdown("  ")
 
 
-    st.write(f"**Compute the standard deviation of {risky_asset1_ex2}** 📝")
+    st.write(f"**Compute the standard deviation of {risky_asset1_ex2}**")
     st.text_input(f"Enter your results",0, key="Ex2.Q2.13")
     
     
@@ -987,10 +993,14 @@ if lab_numbers == "02 - Two risky assets":
     st.markdown("  ")
     st.markdown("  ")
     st.markdown("  ")
+    #st.markdown("  ")
 
 
+    #st.divider()
 
-    
+    st.subheader(f"2. Second risky stock ({risky_asset2_ex2}) 📋")
+    st.markdown("  ")
+
 
 
     ######################## RISKY ASSET 2 ############################
@@ -1004,7 +1014,7 @@ if lab_numbers == "02 - Two risky assets":
 
 
     # View dataframe
-    st.markdown(f"**View the {risky_asset2_ex2} dataset** (Date, Price, Dividends) 📋")
+    st.markdown(f"**View the {risky_asset2_ex2} data** with Date, Closing price and Dividends")
     st.dataframe(df_asset2_ex2)
 
     # Download dataframe as xlsx
@@ -1021,7 +1031,7 @@ if lab_numbers == "02 - Two risky assets":
     # Download the file
     with open(f"{risky_asset2_ex2}_q2.xlsx", "rb") as f:
             st.download_button(
-                    label=f"📥 **Download the {risky_asset2_ex2} dataset**",
+                    label=f"📥 Download the **{risky_asset2_ex2}** data",
                     data=f,
                     file_name=f"{risky_asset2_ex2}_returns_Ex2Q2.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1042,47 +1052,39 @@ if lab_numbers == "02 - Two risky assets":
 
 
     ## Input answers
-    st.write(f"**Compute the realized returns of {risky_asset2_ex2}** 📝")
+    st.write(f"**Compute the holding-period returns of {risky_asset2_ex2}**")
     
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Ex2.Q1.21",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios)
-
-    st.markdown("  ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.21")
     if solution:
         answer_text = f"The realized returns of {risky_asset2_ex2} are **{np.round(asset2_returns[:5],3)}** ..."
         st.success(answer_text)
 
-        df_returns2 = pd.DataFrame({f"{risky_asset2_ex2} Returns":asset2_returns})
-        #st.dataframe(df_returns2)
+        df_returns2 = pd.DataFrame({"Date":df_asset2_ex2["Date"].iloc[1:],f"Returns ({risky_asset2_ex2})":asset2_returns})
+        st.dataframe(df_returns2)
 
         # Create a xlsx file
-        excel_writer = pd.ExcelWriter(f"{risky_asset2_ex2}_returns.xlsx", engine='xlsxwriter')
-        df_returns2.to_excel(excel_writer, index=False, sheet_name='Sheet1')
-        excel_writer.close()
+        # excel_writer = pd.ExcelWriter(f"{risky_asset2_ex2}_returns.xlsx", engine='xlsxwriter')
+        # df_returns2.to_excel(excel_writer, index=False, sheet_name='Sheet1')
+        # excel_writer.close()
 
-        # Download the file
-        with open(f"{risky_asset2_ex2}_returns.xlsx", "rb") as f:
-            st.download_button(
-                    label=f"📥 **Download the {risky_asset2_ex2} holding-period returns**",
-                    data=f,
-                    file_name=f"{risky_asset2_ex2}_returns_ExQ2.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                )
+        # # Download the file
+        # with open(f"{risky_asset2_ex2}_returns.xlsx", "rb") as f:
+        #     st.download_button(
+        #             label=f"📥 **Download the solution**",
+        #             data=f,
+        #             file_name=f"{risky_asset2_ex2}_returns_ExQ2.xlsx",
+        #             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        #         )
 
 
     st.markdown("  ")
     st.markdown("  ")
-
-
 
     
-    st.write(f"**Compute the expected returns of {risky_asset2_ex2}** 📝")
+    st.write(f"**Compute the expected return of {risky_asset2_ex2}**")
     st.text_input("Enter your results",0, key="Ex2.Q1.22")
-
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.22")
     if solution:
@@ -1093,17 +1095,14 @@ if lab_numbers == "02 - Two risky assets":
 
 
 
-    st.write(f"**Compute the standard deviation of {risky_asset2_ex2}** 📝")
+    st.write(f"**Compute the standard deviation of {risky_asset2_ex2}**")
     st.text_input(f"Enter your results",0, key="Ex2.Q2.23")
-
-    st.markdown("  ")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.23")
     if solution:
         st.success(f"The standard deviation of {risky_asset2_ex2} is **{np.round(asset2_std_dev,3)}**.")
 
-    st.markdown("  ")
-    st.markdown("  ")
+
 
 
     ############## CORRELATION ASSET 1 AND ASSET 2 ##############
@@ -1111,15 +1110,21 @@ if lab_numbers == "02 - Two risky assets":
     # Compute correlation between assets 
     asset12_corr = np.corrcoef(asset1_returns,asset2_returns)[0,1]
 
-    # Input answers
-    st.write(f"**Compute the correlation between both assets** 📝")
-    st.text_input(f"Enter your results",0, key="Ex2.Q2.3")
-
     st.markdown("  ")
+    st.markdown("  ")
+    st.markdown("  ")
+
+    st.subheader(f"3. Correlation between {risky_asset1_ex2} and {risky_asset2_ex2} 📈")
+    st.markdown("  ")
+
+
+    # Input answers
+    st.write(f"**Compute the correlation between both assets**")
+    st.text_input(f"Enter your results",0, key="Ex2.Q2.3")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.3")
     if solution:
-        st.success(f"The correlation of both assets is **{np.round(asset12_corr,3)}**.")
+        st.success(f"The correlation between both assets is **{np.round(asset12_corr,3)}**.")
 
 
     ## Merge dataframes with asset 1 and 2 to plot
@@ -1137,15 +1142,17 @@ if lab_numbers == "02 - Two risky assets":
 
 
 
+
+
     ######################################################################################
     ##################################### QUESTION 2 #####################################
     ######################################################################################
 
-    st.subheader("Question 2")
+    st.subheader("Question 2 📝")
 
     #### Q2 PART 1
     st.markdown('''<p style="font-size: 22px;"> Compose different <b>portfolios of two risky assets</b> by investing in one risky asset x% of your wealth and in the other asset (1-x)%.
-                Vary x from -50% to 150% with an increment of 5%. Compute the <b>expected returns</b> and <b>standard deviations</b> of the resulting portfolios. Represent these combinations in a graph, that is <b>draw the set of feasible portfolios</b>.''', 
+                Vary x from -50% to 150% with an increment of 5%. Compute the <b>expected returns</b> and <b>standard deviations</b> of the resulting portfolios.''', 
                 unsafe_allow_html=True)
     
     st.info("**Hint**: Do not forget about the correlation between the returns on these two stocks.")
@@ -1162,7 +1169,6 @@ if lab_numbers == "02 - Two risky assets":
     chart = alt.Chart(df_plot_ex2, title="View the evolution of stock prices").mark_line().encode(x="Date",y="Price",color="Stock")
     st.altair_chart(chart.interactive(), use_container_width=True)
 
-    st.markdown("  ")
     st.markdown("  ")
 
 
@@ -1190,12 +1196,13 @@ if lab_numbers == "02 - Two risky assets":
     chart_portfolios = alt.Chart(df_exp_std_return_portfolios).mark_circle(size=40).encode(y="Expected return",x="Standard deviation")
 
 
-    st.write("**Compute the expected return and standard deviation for each portfolio** 📝")
+
+    st.write("**Compute the expected return and standard deviation for each portfolio**")
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q3.21",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios)
+    # if upload_expected_return is not None:
+    #     expected_return_portfolios = pd.read_csv(upload_expected_return)
+    #     st.write(expected_return_portfolios)
 
     st.markdown("   ")
 
@@ -1212,7 +1219,7 @@ if lab_numbers == "02 - Two risky assets":
         # Download the file
         with open("portfolios_Ex2Q3.xlsx", "rb") as f:
             st.download_button(
-                    label=f"📥 **Download the portfolios' expected return and standard deviation**",
+                    label=f"📥 **Download the solution**",
                     data=f,
                     file_name="portfolios_Ex2Q3.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1256,15 +1263,15 @@ if lab_numbers == "02 - Two risky assets":
 
     ##################################### QUESTION 3 #####################################
 
-    st.subheader("Question 3")
+    st.subheader("Question 3 📝")
 
     st.markdown('''<p style="font-size: 22px;"> Indicate the set of <b>feasible portfolios</b> and the set of <b>efficient portfolios</b>. Next, <b>draw a graph in which you represent the portfolios</b>, that is, the sigma-expected return pairs, you obtain with different combinations of the two risky assets.''', 
                 unsafe_allow_html=True)
     
     st.markdown(" ")
 
-    # Set of feasible portfolios
-    st.write("**What is the set of feasible portfolios ? 📝**")
+    # Set of feasible portfolio
+    st.write("**What is the set of feasible portfolios ?**")
     
     user_input_1 = st.text_area("Write your answer here", key="Q3.Ex2.11")
 
@@ -1277,12 +1284,9 @@ if lab_numbers == "02 - Two risky assets":
     st.markdown("   ")
 
     # Set of efficient portfolios
-    st.write("**What is the set of efficient portfolios ? 📝**")
+    st.write("**What is the set of efficient portfolios ?**")
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q3.Ex2.U12",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios.head())
 
     min_std = df_exp_std_return_portfolios["Standard deviation"].idxmin()
 
@@ -1297,13 +1301,13 @@ if lab_numbers == "02 - Two risky assets":
     
 
     # Draw the set of feasible portfolios 
-    st.write("**Draw the set of feasible portfolios 📝**")
+    st.write("**Draw the set of feasible portfolios**")
 
     upload_graph = st.file_uploader("Drop the graph as an image (jpg, jpeg, png)", key="Q3.Ex2.13", type=['jpg','jpeg','png'])
-    if upload_graph is not None:
+    # if upload_graph is not None:
 
-        image = Image.open(upload_graph)
-        st.image(image, caption='Graph of feasible portfolios')
+    #     image = Image.open(upload_graph)
+    #     st.image(image, caption='Graph of feasible portfolios')
         
 
     solution = st.checkbox('**Solution** ✅',key="SQ3.23")
@@ -1323,7 +1327,7 @@ if lab_numbers == "02 - Two risky assets":
 
     ##################################### QUESTION 4 #####################################
 
-    st.subheader("Question 4")
+    st.subheader("Question 4 📝")
 
     st.markdown('''<p style="font-size: 22px;"> Assume that you cannot short-sell any of the risky assets (only in this exercise). 
                 Indicate the new <b>set of feasible portfolios</b> and the new <b>set of efficient portfolios</b>.''', 
@@ -1338,14 +1342,11 @@ if lab_numbers == "02 - Two risky assets":
     st.markdown("  ")
 
 
-    st.write("**What is the set of feasible portfolios ? 📝**")
+    st.write("**What is the set of feasible portfolios ?**")
 
     # user_input_1 = st.text_area("**What is the set of feasible portfolios ?**", default_text, key="Q4.Ex2.U11")
     
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q4.Ex2.U11",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios)
 
     solution = st.checkbox('**Solution** ✅',key="Q4.Ex2.S11")
     if solution:
@@ -1357,12 +1358,9 @@ if lab_numbers == "02 - Two risky assets":
     st.markdown("  ")
 
 
-    st.write("**What is the set of efficient portfolios ? 📝**")
+    st.write("**What is the set of efficient portfolios ?**")
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q4.Ex2.U12",type=['xlsx'])
-    if upload_expected_return is not None:
-        expected_return_portfolios = pd.read_csv(upload_expected_return)
-        st.write(expected_return_portfolios)
 
     min_std = df_exp_std_return_portfolios_q4["Standard deviation"].idxmin()
 
@@ -1383,7 +1381,7 @@ if lab_numbers == "02 - Two risky assets":
 
     ##################################### QUESTION 5 #####################################
 
-    st.subheader("Question 5")
+    st.subheader("Question 5 📝")
 
     st.markdown('''<p style="font-size: 22px;"> Assume that you also have a risk-free asset with a rate of return of 2% per annum. 
                 <b>Find the tangency portfolio</b>.''', 
@@ -1404,7 +1402,7 @@ if lab_numbers == "02 - Two risky assets":
 
     st.markdown(" ")
 
-    st.write("**What is the tangency portfolio ? 📝**")
+    st.write("**What is the tangency portfolio ?**")
     user_input_1 = st.text_area("Write your answer here", key="UQ5.Ex2")
 
 
@@ -1425,7 +1423,7 @@ if lab_numbers == "02 - Two risky assets":
 
     ######################################### QUESTION 6 #########################################
 
-    st.subheader("Question 6")
+    st.subheader("Question 6 📝")
 
     ### Q5 PART 1
     st.markdown('''<p style="font-size: 22px;">Indicate the <b>set of efficient portfolios</b> that you can achieve if you invest in two risky assets and one risk-free asset.''', 
@@ -1488,14 +1486,16 @@ if lab_numbers == "02 - Two risky assets":
     # Find efficient portfolios 
     df_efficient_portfolios = df_full_portfolio.loc[(df_full_portfolio[f"{risky_asset1_ex2} (in risky portfolio)"]==-0.5) & (df_full_portfolio[f"{risky_asset2_ex2} (in risky portfolio)"]==1.5)].drop(columns=[f"{risky_asset1_ex2} (in risky portfolio)",f"{risky_asset2_ex2} (in risky portfolio)"])
     
-    st.write("**What is the set of efficient portfolios ? 📝**")
+    st.markdown(" ")
+
+    st.write("**What is the set of efficient portfolios ?**")
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="UQ6.Ex6",type=['xlsx'])
 
     solution = st.checkbox('**Solution** ✅',key="SQ6.Ex2")
     if solution:
         st.success("The efficient portfolios are the portfolios with a **combination of the risk-free asset and the tangency portfolio of Question 5.**")
         st.dataframe(df_efficient_portfolios)
-        st.markdown(f"The weights in {risky_asset1_ex2} and {risky_asset2_ex2} where computed based on the weight of the risky portfolio in the overall portfolio.")
+        st.markdown(f"**Important**: The weights in {risky_asset1_ex2} and {risky_asset2_ex2} where computed based on their weights in the overall portfolio, not on their weight in a risky portfolio (without a risky asset).")
 
 
     
