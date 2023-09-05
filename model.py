@@ -111,9 +111,17 @@ st.sidebar.markdown("---")
 
 import numpy as np
 
+list_teachers = ["François Derien","Irina Zviadadze","Mian Liu","Teodor Duevski","Quirin Fleckenstein"]
+select_teacher = st.sidebar.selectbox('Select your teacher ➡️', list_teachers)
+
+
+list_section_code = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+select_code = st.sidebar.selectbox('Select your section code ➡️', list_section_code)
+
+
 student_ids = np.arange(1000,2000,50)
 
-st.sidebar.multiselect(
+select_student = st.sidebar.multiselect(
     'Student id of each group member',
     student_ids, 
     max_selections=3
@@ -140,6 +148,7 @@ list_risky_assets = ['AAPL', 'AMZN', 'IBM','MSFT','TSLA','NVDA',
 # Example of riskfree assets
 list_riskfree_assets = ['CSCO','C','DIS','EBAY']
 
+## Teaching information
 
 dictionary_symbols = {
     'AAPL':'Apple',
@@ -257,9 +266,6 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.sidebar.markdown("  ")
     
-    if st.sidebar.button('**Submit answers**'):
-        st.sidebar.info('Your answers have been submitted !')
-
 
 
 
@@ -347,6 +353,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.write(f"**Compute the holding-period returns of {risky_asset}**")
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q1",type=['xlsx'])
+    answer_1_Q1_1 = upload_expected_return
     if upload_expected_return is not None:
         returns_portfolios = pd.read_csv(upload_expected_return)
         st.dataframe(returns_portfolios)
@@ -368,7 +375,8 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
     # Expected returns
     st.write(f"**Compute the expected returns of {risky_asset}**")
-    answer = st.text_input("Enter your results",0, key="AQ1.2a")
+    answer_1_Q1_2 = st.text_input("Enter your results",0, key="AQ1.2a")
+
 
     st.markdown("  ")
 
@@ -383,7 +391,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     # Standard deviation
     st.write(f"**Compute the standard deviation of {risky_asset}**")
-    st.text_input("Enter your results ",0, key="AUQ1.2b")
+    answer_1_Q1_3 = st.text_input("Enter your results ",0, key="AUQ1.2b")
 
     st.markdown("   ")
 
@@ -472,6 +480,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     riskfree_weight = riskfree_amount/1000
 
     weight1_input = st.number_input(f'Enter the weight of the {risky_asset} asset')
+    answer_1_Q2_1 = weight1_input
 
     solution = st.checkbox('**Solution** ✅', key="SQ2.1w1")
     if solution:
@@ -482,6 +491,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.markdown("  ")
     
     weight2_input = st.number_input(f'Enter the weight of the risk-free*asset')
+    answer_1_Q2_2 = weight2_input
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.1w2")
     if solution:
@@ -508,7 +518,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     # Enter portfolio expected returns
     st.write("**Compute the expected return of the portfolio**")
-    st.text_input("Enter your results",0, key="AQ2.21")
+    answer_1_Q2_3 = st.text_input("Enter your results",0, key="AQ2.21")
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.21")
     if solution:
@@ -521,7 +531,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     # Enter portfolio standard deviation
     st.write("**Compute the standard deviation of the portfolio**")
-    st.text_input("Enter your results",0, key="AQ2.22")
+    answer_1_Q2_4 = st.text_input("Enter your results",0, key="AQ2.22")
 
 
     solution = st.checkbox('**Solution** ✅',key="SQ2.22")
@@ -572,7 +582,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     upload_expected_return = st.file_uploader("Drop your results in an excel file (.xlsx)", key="Q3.21",type=['xlsx'])
-
+    answer_1_Q3_1 = upload_expected_return
 
 
     solution = st.checkbox('**Solution** ✅',key="SQ3.1")
@@ -604,9 +614,11 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.write("**Draw the set of feasible portfolios**")
 
     upload_graph = st.file_uploader("Drop graph as an image (jpg, jpeg, png)", key="Q3.23", type=['jpg','jpeg','png'])
+    answer_1_Q3_2 = upload_graph
     if upload_graph is not None:
 
         image = Image.open(upload_graph)
+        #answer_1_Q3_2 = image
         #st.image(image, caption='Graph of the set of feasible portfolios')
 
 
@@ -643,6 +655,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     ###### PART 1   
     user_input_1 = st.text_area("**Can you find which portfolio has the highest expected return ?**", default_text)
+    answer_1_Q4_1 = user_input_1
     solution = st.checkbox('**Solution** ✅',key="SQ4.1")
     if solution:
         st.success(f"The portfolio with **1** in the risky asset ({risky_asset}) and **0** in the risk free asset.")
@@ -653,6 +666,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     ###### PART 2
     user_input_2 = st.text_area("**Can you find which portfolio has the lowest expected return ?**", default_text)
+    answer_1_Q4_2 = user_input_2
     solution = st.checkbox('**Solution** ✅',key="SQ4.2")
     if solution:
         st.success(f"The portfolio with **0** in the risky asset ({risky_asset}) and **1** in the risk free asset")
@@ -663,6 +677,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     ###### PART 3
     user_input_3 = st.text_area("**Can you find which portfolio has the highest standard deviation ?**", default_text)
+    answer_1_Q4_3 = user_input_3
     solution = st.checkbox('**Solution** ✅',key="SQ4.3")
     if solution:
         st.success(f"The portfolio with **1** in the risky asset ({risky_asset}) and **0** in the risk free asset")
@@ -675,6 +690,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
     ###### PART 4
     user_input_4 = st.text_area("**Can you find which portfolio has the lowest standard deviation ?**", default_text)
+    answer_1_Q4_4 = user_input_4
     solution = st.checkbox('**Solution** ✅',key="SQ4.4")
     if solution:
         st.success(f"The portfolio with **0** in the risky asset ({risky_asset}) and **1** in the risk free asset.")
@@ -726,7 +742,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.write("**Compute the expected return and standard deviation for each portfolio**")
     upload_expected_return = st.file_uploader("Drop results in an excel file (.xlsx)", key="UQ5.1", type=['xlsx'])
-    
+    answer_1_Q5_1 = upload_expected_return
     if upload_expected_return is not None:
         expected_return_portfolios = pd.read_csv(upload_expected_return)
         st.write(expected_return_portfolios.head())
@@ -755,7 +771,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
     st.write("**Draw the set of feasible portfolios**")
 
-    upload_graph = st.file_uploader("Drop graph as an image (jpg, jpeg, png)", key="UQ5.2", type=['jpg','jpeg','png'])
+    answer_1_Q5_2 = st.file_uploader("Drop graph as an image (jpg, jpeg, png)", key="UQ5.2", type=['jpg','jpeg','png'])
     # if upload_graph is not None:
 
     #     image = Image.open(upload_graph)
@@ -786,8 +802,9 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     # st.dataframe(df_portfolios)
     st.markdown("  ")
     
-    ###### PART 1   
-    user_input_1 = st.text_area("**Can you find which portfolio has the highest expected return?**", default_text, key="Q6.1")
+    ###### PART 1 
+    #answer_1_Q4_2 = user_input_2
+    answer_1_Q6_1 = st.text_area("**Can you find which portfolio has the highest expected return?**", default_text, key="Q6.1")
     solution = st.checkbox('**Solution** ✅',key="SQ6.1")
     if solution:
         st.success(f"The portfolio with **2** in the risky asset ({risky_asset}) and **-1** in the risk free asset.")
@@ -797,7 +814,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     ###### PART 2
-    user_input_2 = st.text_area("**Can you find which portfolio has the lowest expected return?**", default_text, key="Q6.2")
+    answer_1_Q6_2 = st.text_area("**Can you find which portfolio has the lowest expected return?**", default_text, key="Q6.2")
     
     solution = st.checkbox('**Solution** ✅',key="SQ6.2")
     if solution:
@@ -808,7 +825,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
 
 
     ###### PART 3
-    user_input_3 = st.text_area("**Can you find which portfolio has the highest standard deviation?**", default_text, key="Q6.3")
+    answer_1_Q6_3 = st.text_area("**Can you find which portfolio has the highest standard deviation?**", default_text, key="Q6.3")
     solution = st.checkbox('**Solution** ✅',key="SQ6.3")
     if solution:
         st.success(f"The portfolio with **2** in {risky_asset} and **-1** in the risk-free asset")
@@ -818,7 +835,7 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     
     
     ###### PART 4
-    user_input_4 = st.text_area("**Can you find which portfolio has the lowest standard deviation?**", default_text, key="Q6.4")
+    answer_1_Q6_4 = st.text_area("**Can you find which portfolio has the lowest standard deviation?**", default_text, key="Q6.4")
     solution = st.checkbox('**Solution** ✅',key="SQ6.4")
     if solution:
         st.success(f"The portfolio where you invest **2** in the risky-free asset and **-1** in {risky_asset}")
@@ -829,6 +846,84 @@ if lab_numbers == "01 - One risky and one risk-free asset": # premiere page
     st.markdown(" ")
     st.markdown(" ")
     st.markdown("#### Congratulations you finished Exercise 1 🎉")
+
+    list_answer = [answer_1_Q1_1,
+answer_1_Q1_2,
+answer_1_Q1_3,
+answer_1_Q2_1,
+answer_1_Q2_2,
+answer_1_Q2_3,
+answer_1_Q2_4,
+answer_1_Q3_1,
+answer_1_Q3_2,
+answer_1_Q4_1,
+answer_1_Q4_2,
+answer_1_Q4_3,
+answer_1_Q4_4,
+answer_1_Q5_1,
+answer_1_Q5_2,
+answer_1_Q6_1,
+answer_1_Q6_2,
+answer_1_Q6_3,
+answer_1_Q6_4,]
+
+    count = len([x for x in list_answer if x not in [0, 0.0, None, "Write the answer in this box","0"]])
+    df_1 = pd.DataFrame({
+    'Professor': select_teacher,
+    'Section': select_code,
+    'Group': select_student,
+    'Part1': 1,
+    'Start time':'05/09/2023 09:40',
+    'End time': '05/09/2023 10:40',
+    'Completed':count,
+    'Completed %':round(count/19*100,2),
+    'Q1_1':answer_1_Q1_1,
+    'Q1_2':answer_1_Q1_2,
+    'Q1_3':answer_1_Q1_3,
+    'Q2_1':answer_1_Q2_1,
+    'Q2_2':answer_1_Q2_2,
+    'Q2_3':answer_1_Q2_3,
+    'Q2_4':answer_1_Q2_4,
+    'Q3_1':answer_1_Q3_1,
+    'Q3_2':answer_1_Q3_2,
+    'Q4_1':answer_1_Q4_1,
+    'Q4_2':answer_1_Q4_2,
+    'Q4_3':answer_1_Q4_3,
+    'Q4_4':answer_1_Q4_4,
+    'Q5_1':answer_1_Q5_1,
+    'Q5_2':answer_1_Q5_2,
+    'Q6_1':answer_1_Q6_1,
+    'Q6_2':answer_1_Q6_2,
+    'Q6_3':answer_1_Q6_3,
+    'Q6_4':answer_1_Q6_4
+    })
+
+    st.dataframe(df_1)
+    if st.sidebar.button('**Submit answers Ex1**'):
+        df_old = pd.read_csv("master.csv")
+        result = pd.concat([df_old, df_1], ignore_index=True)
+        result.to_csv("master.csv",index=False)
+        st.sidebar.info('Your answers have been submitted !')
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -862,8 +957,7 @@ if lab_numbers == "02 - Two risky assets":
 
     st.sidebar.markdown("  ")
     
-    if st.sidebar.button('**Submit answers**'):
-        st.sidebar.info('Your answers have been submitted !')
+
     
     
     
